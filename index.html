@@ -15,7 +15,6 @@
         }
 
         header {
-            background-color: #0040b3;
             width: 100%;
             height: 80px;
             position: absolute;
@@ -59,36 +58,34 @@
             padding: 10px;
             background-color: #0bffe4;
             border: 5px solid black;
-            top: 100px;
-            bottom: 500px;
+            top: 300px;
+            left: 500px;
         }
 
         .btn {
-            padding: 0px;
-            font-size: 22px;
             background-color: #68ff00;
-            border: 5px solid green;
-            margin: 0px;
+            top: 450px;
+            margin-left: 600px;
+            margin-right: 200px;
+            font-size: 20px;
         }
 
         #invis {
             position: fixed;
-            top: 300px;
+            top: 425px;
             margin: 0px;
             padding: 0px;
             width: 40%;
         }
 
         #message {
-            position: fixed;
             background-color: #ff6601;
             height: 40px;
             width: 280px;
             padding: 5px;
             margin: 5px;
-            border: 5px solid green;
             font-size: 30px;
-            top: 400px;
+            top: 425px;
         }
 
         #picture {
@@ -96,7 +93,7 @@
             width: 2px;
             height: 2px;
             top: 100px;
-            left: 800px;
+            left: 500px;
         }
 
         #video {
@@ -104,7 +101,7 @@
             width: 2px;
             height: 2px;
             top: 100px;
-            left: 900px;
+            left: 500px;
         }
 
 
@@ -277,7 +274,7 @@
                 quiz[1] = new quizConstructor('Videoda çalınan eser hangi filme aittir ', 'Hababam Sınıfı', 'Yedi Bela Hüsnü', 'Korkusuz Korkak', 'Şabaniye', 1, "", false, "img/muzik2.webm");
 
                 quiz[2] = new quizConstructor('Şekildeki meyveleri dikkate alarak hesapladığınızda soru işareti yerine hangi sayı gelmelidir? ', '110', '115', '50', '35', 4, "img/1.jpg", false);
-                quiz[3] = new quizConstructor('Videoda çalan müziği seslendiren grubun adı nedir', 'MFÖ', 'MANGA', 'SEKSONDORT', 'DUMAN', 1, "", false, "img/müzik.mp4");
+                quiz[3] = new quizConstructor('Videoda çalan müziği seslendiren grubun adı nedir', 'MFÖ', 'MANGA', 'SEKSONDORT', 'DUMAN', 1, "", false, "img/muzik3.webm");
                 quiz[4] = new quizConstructor(' Saat 15:30 olduğunda akrep ile yelkovan arasında kaç derecelik açı olur? ', '45', '70', '75', '90', 3, "img/2.jpg", false);
                 quiz[5] = new quizConstructor();
                 return quiz
@@ -389,7 +386,8 @@
             function imageInsert() {
                 var imageChoice = $('<img>');
                 imageChoice.attr('src', quiz[i].imageURL);
-                imageChoice.attr('width', '500px');
+                imageChoice.attr('width', '300px');
+                imageChoice.attr('height', '150px');
                 return imageChoice;
             }
 
@@ -398,7 +396,8 @@
                 var imageChoice = $('<video>');
                 imageChoice.attr("controls", "controls");
                 imageChoice.html('<source src=' + quiz[i].videoURL + ' type=\'video/mp4\'>');
-                imageChoice.attr('width', '500px');
+                imageChoice.attr('width', '300px');
+                imageChoice.attr('height', '150px');
                 return imageChoice;
             }
         })
