@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Bilgi Yarışması</title>
+    <style>
+        body {
+            background-image: url("img/bg.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+
+        header {
+            background-color: #0040b3;
+            width: 100%;
+            height: 80px;
+            position: absolute;
+            top: 10px;
+            text-align: center;
+            font-size: 36px;
+        }
+
+        #seconds-count {
+            background-color: #e71d11;
+            position: absolute;
+            top: 20px;
+            left: 50px;
+        }
+
+        #new-question {
+            position: fixed;
+            top: 30px;
+            right: 100px;
+        }
+
+        .stats {
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            height: 80px;
+            width: 200px;
+            font-size: 20px;
+        }
+
+        .spacer {
+            height: 80px;
+            width: 100%;
+        }
+
+        #question {
+            position: fixed;
+            font-size: 26px;
+            height: 100px;
+            width: 400px;
+            padding: 10px;
+            background-color: #0bffe4;
+            border: 5px solid black;
+            top: 100px;
+            bottom: 500px;
+        }
+
+        .btn {
+            padding: 0px;
+            font-size: 22px;
+            background-color: #68ff00;
+            border: 5px solid green;
+            margin: 0px;
+        }
+
+        #invis {
+            position: fixed;
+            top: 300px;
+            margin: 0px;
+            padding: 0px;
+            width: 40%;
+        }
+
+        #message {
+            position: fixed;
+            background-color: #ff6601;
+            height: 40px;
+            width: 280px;
+            padding: 5px;
+            margin: 5px;
+            border: 5px solid green;
+            font-size: 30px;
+            top: 400px;
+        }
+
+        #picture {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            top: 100px;
+            left: 800px;
+        }
+
+        #video {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            top: 100px;
+            left: 900px;
+        }
+
+
+        #Reveal {
+            position: fixed;
+            top: 500px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var i;
+            var quiz = [];
+            var Count;
+            var imageChoice;
+            var correct = 0;
+            var missed = 0;
+            var attempted = 0;
+            var rightAns;
+            var intervalTimer;
+            var delayButtonAlert;
+            var newQuest;
+            var ansAttempt;
+            var sayac = correct + missed;
+
+            temizle();
+            quizBuild();
+
+            i = 1;
+
+            hideStuff();
+
+            $("#new-question").on("click", displayNewQuestion);
+            $("#new-question").on("click", displayStats);
+            $("#new-question").on("click", imageInsert);
+
+            function temizle() {
+                document.getElementById("deneme").style.visibility = "hidden";
+            }
+
+            function displayNewQuestion() {
+
+                document.getElementById("deneme").style.visibility = "visible";
+
+                if (i > 0) {
+                    clearTimeout(newQuest);
+                }
+
+                $("#new-question").hide();
+                videoInsert();
+                imageInsert();
+                hideStuff();
+
+
+                ansAttempt = false;
+                quizWrite();
+
+                Count = 30;
+                intervalTimer = setInterval(countDown, 1000);
+
+                delayButtonAlert = setTimeout(notAttempted, 30000);
+                clearButton();
+
+
+            }
+
+
+            $(document).on("click", ".answer", Attempted);
+
+
+            // Sayaç bu fonksiyon aracılığı ile azalır.
+            function countDown() {
+                Count -= 1;
+                $("#seconds-count").html('<h3> ' + Count + " saniyen kaldı </h3> ");
+                return Count;
+            }
+
+            function hideStuff() {
+
+                //$(".stats").hide();
+                $("#message").hide();
+                $("#picture").hide();
+                $("#Reveal").hide();
+            }
+
+
+            //Cevapların doğru veya yanlış olduğunu kontrol eder.
+            function Attempted() {
+
+                clearTimeout(delayButtonAlert);
+                clearTimeout(intervalTimer);
+
+
+                ansAttempt = true;
+                $("#message").show();
+
+                userChoice = parseInt($(this).val());
+                console.log(userChoice, i);
+
+                attempted += 1;
+
+                if (userChoice == quiz[i].ans) {
+
+                    $("#message").html('Doğru Cevap verdin!');
+                    correct += 1;
+                } else {
+                    $("#message").html('Yanlış Cevap verdin !');
+                    missed += 1;
+                }
+
+                $(".stats").show();
+                displayStats();
+
+                displayAnsImg();
+            }
+
+            //Eğer belirtilen sürede cevap verilmemiş ise süre sonunda yanlış olarak sayılır yeni soruya geçer.
+            function notAttempted() {
+
+                if (ansAttempt != true) {
+
+                    clearTimeout(delayButtonAlert);
+                    clearTimeout(intervalTimer);
+
+                    missed += 1;
+
+                    $(".stats").show();
+                    displayStats();
+
+                    displayAnsImg();
+                } else {
+
+                }
+            }
+
+            //Bir soruya cevap verildikten 2 saniye sonra yeni soruyu ekrana bastırır.
+            function displayAnsImg() {
+
+                if (i < quiz.length) {
+
+                    newQuest = setTimeout(displayNewQuestion, 2000);
+                    $("video").remove();
+
+                }
+
+                imageChoice = imageInsert();
+                $("#picture").html(imageChoice);
+                $("#Reveal").html("Doğru Cevap: " + quizAnswer());
+
+                $("#picture").show();
+                $("#Reveal").show();
+
+                i++;
+            }
+
+            //Sorular için basit bir constructor
+            function quizConstructor(question, choice1, choice2, choice3, choice4, ans, imageURL, attempted, videoURL) {
+                this.question = question;
+                this.choice1 = choice1;
+                this.choice2 = choice2;
+                this.choice3 = choice3;
+                this.choice4 = choice4;
+                this.ans = ans;
+                this.imageURL = imageURL;
+                this.attempted = attempted;
+                this.videoURL = videoURL;
+            }
+
+            //Sorular, seçenekleri, cevapları, resimleri, videoları hepsi burada dizi aracılığı ile tanımlanır.
+            function quizBuild() {
+                quiz[1] = new quizConstructor('Videoda çalınan eser hangi filme aittir ', 'Hababam Sınıfı', 'Yedi Bela Hüsnü', 'Korkusuz Korkak', 'Şabaniye', 1, "", false, "img/muzik2.webm");
+
+                quiz[2] = new quizConstructor('Şekildeki meyveleri dikkate alarak hesapladığınızda soru işareti yerine hangi sayı gelmelidir? ', '110', '115', '50', '35', 4, "img/1.jpg", false);
+                quiz[3] = new quizConstructor('Videoda çalan müziği seslendiren grubun adı nedir', 'MFÖ', 'MANGA', 'SEKSONDORT', 'DUMAN', 1, "", false, "img/müzik.mp4");
+                quiz[4] = new quizConstructor(' Saat 15:30 olduğunda akrep ile yelkovan arasında kaç derecelik açı olur? ', '45', '70', '75', '90', 3, "img/2.jpg", false);
+                quiz[5] = new quizConstructor();
+                return quiz
+            }
+
+            //Her cevap verilen soru sonunda buton renkleri default hale döndürülür.
+            function clearButton() {
+                $("#option-1").css("background-color", "bisque");
+                $("#option-2").css("background-color", "bisque");
+                $("#option-3").css("background-color", "bisque");
+                $("#option-4").css("background-color", "bisque");
+            }
+
+            //soruları ekrana basar.
+            function quizWrite() {
+                $("#question").html("" + quiz[i].question + " ?");
+
+                console.log(quiz[i].videoURL);
+                if (quiz[i].videoURL == null) {
+                    imageChoice = imageInsert();
+                    $("#picture").show();
+                    $("#picture").html(imageChoice);
+                } else {
+                    imageChoice = videoInsert();
+                    $("#video").show();
+                    $("#video").html(imageChoice);
+                }
+
+                // dizinin 6. elemanında soru olmadığı için 5. indise geldiğinde ekran temizlenir ve oyun durur.
+                if (i === 5) {
+                    var x = document.getElementById("deneme");
+                    if (x.style.display === "none") {
+                        x.style.display = "block";
+                    } else {
+                        x.style.display = "none";
+                    }
+
+                    var x = document.getElementById("seconds-count");
+                    if (x.style.display === "none") {
+                        x.style.display = "block";
+                    } else {
+                        x.style.display = "none";
+                    }
+                    alert("Oyun Bitti!\n" + "Doğru Sayısı: " + correct + "\nYanlış Sayısı: " + missed);
+
+                }
+                $("#option-1").html(quiz[i].choice1);
+                $("#option-2").html(quiz[i].choice2);
+                $("#option-3").html(quiz[i].choice3);
+                $("#option-4").html(quiz[i].choice4);
+
+            }
+
+            //cevap kısmında value değerleri ile seçim eşleşmeleri
+            function quizAnswer() {
+                if (quiz[i].ans == 1) {
+                    quizAns = quiz[i].choice1;
+                } else if (quiz[i].ans == 2) {
+                    quizAns = quiz[i].choice2;
+                } else if (quiz[i].ans == 3) {
+                    quizAns = quiz[i].choice3;
+                }
+                if (quiz[i].ans == 4) {
+                    quizAns = quiz[i].choice4;
+                }
+
+                // Eğer cevap 1. seçenek ise onu yeşil yap gerisini kırmızı yap
+                if (1 == quiz[i].ans) {
+                    $("#option-1").css("background-color", "green");
+                    $("#option-2").css("background-color", "red");
+                    $("#option-3").css("background-color", "red");
+                    $("#option-4").css("background-color", "red");
+                }
+
+                // Eğer cevap 2. seçenek ise onu yeşil yap gerisini kırmızı yap
+
+                if (2 == quiz[i].ans) {
+                    $("#option-1").css("background-color", "red");
+                    $("#option-2").css("background-color", "green");
+                    $("#option-3").css("background-color", "red");
+                    $("#option-4").css("background-color", "red");
+                }
+
+                // Eğer cevap 3. seçenek ise onu yeşil yap gerisini kırmızı yap
+                if (3 == quiz[i].ans) {
+                    $("#option-1").css("background-color", "red");
+                    $("#option-2").css("background-color", "red");
+                    $("#option-3").css("background-color", "green");
+                    $("#option-4").css("background-color", "red");
+                }
+
+                // Eğer cevap 4. seçenek ise onu yeşil yap gerisini kırmızı yap
+                if (4 == quiz[i].ans) {
+                    $("#option-1").css("background-color", "red");
+                    $("#option-2").css("background-color", "red");
+                    $("#option-3").css("background-color", "red");
+                    $("#option-4").css("background-color", "green");
+                }
+
+                return quizAns;
+            }
+
+            //Ekrana Doğru sayısını, yanlış sayısını ve deneme sayısını yazdır.
+            function displayStats() {
+                $(".stats").html("<h4> Doğru Sayısı: " + correct + '<br>' + "Yanlış Sayısı: " + missed + '<br>' + "Deneme Sayısı: " + attempted + '</h4>');
+            }
+
+            //Resim ekleme fonksiyonu
+            function imageInsert() {
+                var imageChoice = $('<img>');
+                imageChoice.attr('src', quiz[i].imageURL);
+                imageChoice.attr('width', '500px');
+                return imageChoice;
+            }
+
+            //Video ekleme fonksiyonu
+            function videoInsert() {
+                var imageChoice = $('<video>');
+                imageChoice.attr("controls", "controls");
+                imageChoice.html('<source src=' + quiz[i].videoURL + ' type=\'video/mp4\'>');
+                imageChoice.attr('width', '500px');
+                return imageChoice;
+            }
+        })
+    </script>
+</head>
+<body>
+
+<header> Bilgi Yarışması</header>
+
+
+<div id="seconds-count"></div>
+<div class="stats" id="div1"></div>
+<button class="btn" id="new-question">Oyunu Başlat</button>
+
+<div id="ana-div"></div>
+<div class="container" id="deneme" name="deneme">
+
+    <div class="row spacer"></div>
+    <div class="row">
+        <div class="col align-self-center">
+            <span id="question"> </span>
+            <div id="invis">
+                <button class="btn btn-block btn-lg answer" id="option-1" type="button" value="1">Choice A</button>
+                <button class="btn btn-block btn-lg answer" id="option-2" type="button" value="2">Choice B</button>
+                <button class="btn btn-block btn-lg answer" id="option-3" type="button" value="3">Choice C</button>
+                <button class="btn btn-block btn-lg answer" id="option-4" type="button" value="4">Choice D</button>
+            </div>
+            <div class="col pic">
+                <h3 id="message"></h3>
+                <button class="btn" id="Reveal"></button>
+                <div id="picture"></div>
+                <div id="video"></div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
