@@ -24,7 +24,6 @@
         }
 
         #seconds-count {
-            background-color: #e71d11;
             position: absolute;
             top: 20px;
             left: 50px;
@@ -171,7 +170,6 @@
             $(document).on("click", ".answer", Attempted);
 
 
-            // Sayaç bu fonksiyon aracılığı ile azalır.
             function countDown() {
                 Count -= 1;
                 $("#seconds-count").html('<h3> ' + Count + " saniyen kaldı </h3> ");
@@ -180,14 +178,12 @@
 
             function hideStuff() {
 
-                //$(".stats").hide();
                 $("#message").hide();
                 $("#picture").hide();
                 $("#Reveal").hide();
             }
 
 
-            //Cevapların doğru veya yanlış olduğunu kontrol eder.
             function Attempted() {
 
                 clearTimeout(delayButtonAlert);
@@ -217,7 +213,6 @@
                 displayAnsImg();
             }
 
-            //Eğer belirtilen sürede cevap verilmemiş ise süre sonunda yanlış olarak sayılır yeni soruya geçer.
             function notAttempted() {
 
                 if (ansAttempt != true) {
@@ -236,7 +231,6 @@
                 }
             }
 
-            //Bir soruya cevap verildikten 2 saniye sonra yeni soruyu ekrana bastırır.
             function displayAnsImg() {
 
                 if (i < quiz.length) {
@@ -256,7 +250,6 @@
                 i++;
             }
 
-            //Sorular için basit bir constructor
             function quizConstructor(question, choice1, choice2, choice3, choice4, ans, imageURL, attempted, videoURL) {
                 this.question = question;
                 this.choice1 = choice1;
@@ -269,7 +262,6 @@
                 this.videoURL = videoURL;
             }
 
-            //Sorular, seçenekleri, cevapları, resimleri, videoları hepsi burada dizi aracılığı ile tanımlanır.
             function quizBuild() {
                 quiz[1] = new quizConstructor('Videoda çalınan eser hangi filme aittir ', 'Hababam Sınıfı', 'Yedi Bela Hüsnü', 'Korkusuz Korkak', 'Şabaniye', 1, "", false, "img/muzik2.webm");
 
@@ -280,7 +272,6 @@
                 return quiz
             }
 
-            //Her cevap verilen soru sonunda buton renkleri default hale döndürülür.
             function clearButton() {
                 $("#option-1").css("background-color", "bisque");
                 $("#option-2").css("background-color", "bisque");
@@ -288,7 +279,6 @@
                 $("#option-4").css("background-color", "bisque");
             }
 
-            //soruları ekrana basar.
             function quizWrite() {
                 $("#question").html("" + quiz[i].question + " ?");
 
@@ -303,7 +293,6 @@
                     $("#video").html(imageChoice);
                 }
 
-                // dizinin 6. elemanında soru olmadığı için 5. indise geldiğinde ekran temizlenir ve oyun durur.
                 if (i === 5) {
                     var x = document.getElementById("deneme");
                     if (x.style.display === "none") {
@@ -328,7 +317,6 @@
 
             }
 
-            //cevap kısmında value değerleri ile seçim eşleşmeleri
             function quizAnswer() {
                 if (quiz[i].ans == 1) {
                     quizAns = quiz[i].choice1;
@@ -341,7 +329,6 @@
                     quizAns = quiz[i].choice4;
                 }
 
-                // Eğer cevap 1. seçenek ise onu yeşil yap gerisini kırmızı yap
                 if (1 == quiz[i].ans) {
                     $("#option-1").css("background-color", "green");
                     $("#option-2").css("background-color", "red");
@@ -349,7 +336,6 @@
                     $("#option-4").css("background-color", "red");
                 }
 
-                // Eğer cevap 2. seçenek ise onu yeşil yap gerisini kırmızı yap
 
                 if (2 == quiz[i].ans) {
                     $("#option-1").css("background-color", "red");
@@ -358,7 +344,6 @@
                     $("#option-4").css("background-color", "red");
                 }
 
-                // Eğer cevap 3. seçenek ise onu yeşil yap gerisini kırmızı yap
                 if (3 == quiz[i].ans) {
                     $("#option-1").css("background-color", "red");
                     $("#option-2").css("background-color", "red");
@@ -366,7 +351,6 @@
                     $("#option-4").css("background-color", "red");
                 }
 
-                // Eğer cevap 4. seçenek ise onu yeşil yap gerisini kırmızı yap
                 if (4 == quiz[i].ans) {
                     $("#option-1").css("background-color", "red");
                     $("#option-2").css("background-color", "red");
